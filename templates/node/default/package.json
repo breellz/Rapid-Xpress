@@ -1,0 +1,19 @@
+{
+    "name": "placeholder",
+    "version": "[VERSION]",
+    "description": "[DESCRIPTION]",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "node server.js",
+        "start:dev": "nodemon server.js"
+    },
+    "author": "[AUTHOR]",
+    "license": "[LICENSE]",
+    "dependencies": {
+        "dotenv": "^16.3.1"
+    },
+    "devDependencies": {
+        "nodemon": "^3.0.1"
+    }
+}

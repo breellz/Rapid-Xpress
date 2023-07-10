@@ -1,0 +1,30 @@
+{
+  "name": "rapid-xpress",
+  "version": "1.0.0",
+  "description": "A CLI generator for lightning-fast scaffolding of ExpressJS applications, empowering you to build with speed and efficiency",
+  "main": "index.js",
+  "bin": {
+    "rapid-xpress": "./index.js"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [
+    "express",
+    "scaffold",
+    "cli",
+    "generator",
+    "tool",
+    "setup",
+    "boilerplate",
+    "speed"
+  ],
+  "author": "Bassit Owolabi",
+  "license": "MIT",
+  "dependencies": {
+    "caporal": "^1.4.0",
+    "colors": "^1.4.0",
+    "prompt": "^1.3.0",
+    "shelljs": "^0.8.5"
+  }
+}

@@ -6,9 +6,7 @@ This project was generated with [Rapid Xpress](https://) v1.0.0.
 
 1. Install dependencies - `npm install`
 
-2. Create a new file `.env` if it doesn't exist and copy the contents of `env.dev` into it to be able to run your server on production environment.
-
-3. Then you need to provide values for the configuration env files at the `src/config/ directory`.
+2. Provide values for the configuration env files at the `src/config/ directory`.
 
 ## Running the server locally
 

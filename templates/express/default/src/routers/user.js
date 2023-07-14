@@ -42,7 +42,7 @@ router.post("/users/logout", Auth, async (req, res) => {
     });
     await req.user.save();
 
-    res.send();
+    res.send({ message: "successfully loggedout" });
   } catch (error) {
     res.status(500).send();
   }
@@ -54,7 +54,7 @@ router.post("/users/logoutAll", Auth, async (req, res) => {
 
     await req.user.save();
 
-    res.send();
+    res.send({ message: "successfully loggedout all sessions" });
   } catch (error) {
     res.status(500).send(error);
   }
@@ -66,7 +66,7 @@ router.get("/users/me", Auth, async (req, res) => {
 
 router.patch("/users/me", Auth, async (req, res) => {
   const updates = Object.keys(req.body);
-  const allowedUpdates = ["name", "email", "password", "age"];
+  const allowedUpdates = ["name", "password", "age"];
 
   const isValidOperation = updates.every((update) =>
     allowedUpdates.includes(update)
@@ -120,7 +120,7 @@ router.post(
       .toBuffer();
     req.user.avatar = buffer;
     await req.user.save();
-    res.send();
+    res.send({ message: "successfully uploaded" });
   },
   (error, req, res, next) => {
     res.status(400).send({ error: error.message });
@@ -130,15 +130,15 @@ router.post(
 router.delete("/users/me/avatar", Auth, async (req, res) => {
   req.user.avatar = undefined;
   await req.user.save();
-  res.send();
+  res.send({ message: "successfully deleted" });
 });
 
-router.get("/users/:id/avatar", async (req, res) => {
+router.get("/users/me/avatar", Auth, async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
+    const user = req.user;
 
-    if (!user || !user.avatar) {
-      throw new Error();
+    if (!user.avatar) {
+      throw new Error({ error: "no avatar found" });
     }
 
     res.set("content-type", "image/png");

@@ -4,7 +4,7 @@ A CLI generator for lightning-fast scaffolding of ExpressJS applications, empowe
 
 # Installing rapid Xpress
 
-Rapid Xpress is available on on the [npm registry](https://www.npmjs.com/)
+Rapid Xpress is available on NodeJs via the [npm registry](https://www.npmjs.com/)
 
 Requires Nodejs to be installed
 
@@ -20,13 +20,11 @@ Install Rapid Xpress globally so you can have access to it anywhere
 
 # Docs
 
-- Click here for documentation
+- Click here for [documentation](https://documenter.getpostman.com/view/11784799/2s946e9DA7)
 
 # GETTING STARTED
 
 To initialize a new project, you need to use the <b>create</b> command and specify the template to use.
-
-Only express is supported at the moment
 
 Let's create a new Express app, <b>rapid</b>, with the default template. Project files would be created in the current working directory
 
@@ -36,7 +34,7 @@ To use a specified template e.g mvc
 
 `$ rapid-xpress create express --variant mvc`
 
-Project dependencies are automatiacally installed
+Project dependencies are automatiacally installed and you'll be prompted for your project attributes
 
 To run development server
 

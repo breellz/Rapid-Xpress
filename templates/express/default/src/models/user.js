@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const customError = require("../middleware/error/customError");
 
 const userSchema = new mongoose.Schema(
   {
@@ -85,13 +86,13 @@ userSchema.statics.findByCredentials = async (email, password) => {
   const user = await User.findOne({ email });
 
   if (!user) {
-    throw new Error("Unable to log in");
+    throw new customError("USER_NOT_FOUND");
   }
 
   const isMatch = await bcrypt.compare(password, user.password);
 
   if (!isMatch) {
-    throw new Error("Unable to login");
+    throw new customError("INVALID_EMAIL_OR_PASSWORD");
   }
 
   return user;

@@ -30,7 +30,9 @@ router.post("/users", async (req, res) => {
   }
 });
 
-router.post("/users/login", async (req, res) => {
+// login route with custom error handling
+
+router.post("/users/login", async (req, res, next) => {
   const { error } = loginValidation(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
@@ -42,8 +44,8 @@ router.post("/users/login", async (req, res) => {
     const token = await user.generateAuthToken();
     res.send({ user, token });
   } catch (error) {
-    console.log(error);
-    res.status(400).send();
+    //pass error
+    next(error);
   }
 });
 

@@ -46,6 +46,8 @@ Server would be running on http://localhost:8080/ by default
 
 Author: [Bassit Owolabi](https://github.com/breellz)
 
+Contributions are welcomed. Kindly visit the github repo and submit a pull request
+
 # License
 
 [MIT](https://github.com/breellz/Rapid-Xpress/blob/main/LICENSE)

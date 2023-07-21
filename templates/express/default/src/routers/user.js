@@ -7,9 +7,17 @@ const {
   sendWelcomeEmail,
   sendCancellationEmail,
 } = require("../emails/account");
+const {
+  signupValidation,
+  loginValidation,
+} = require("../utils/validations/validation");
 const router = new express.Router();
 
+// sign up new users
 router.post("/users", async (req, res) => {
+  const { error } = signupValidation(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
   const user = new User(req.body);
 
   try {
@@ -23,6 +31,9 @@ router.post("/users", async (req, res) => {
 });
 
 router.post("/users/login", async (req, res) => {
+  const { error } = loginValidation(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
   try {
     const user = await User.findByCredentials(
       req.body.email,
@@ -31,6 +42,7 @@ router.post("/users/login", async (req, res) => {
     const token = await user.generateAuthToken();
     res.send({ user, token });
   } catch (error) {
+    console.log(error);
     res.status(400).send();
   }
 });

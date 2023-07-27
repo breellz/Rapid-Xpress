@@ -26,7 +26,9 @@ Install Rapid Xpress globally so you can have access to it anywhere
 
 To initialize a new project, you need to use the <b>create</b> command and specify the template to use.
 
-Let's create a new Express app, <b>rapid</b>, with the default template. Project files would be created in the current working directory
+Let's create a new Express app, with the default template. Project files would be created in the current working directory
+
+Template comes with authentication, custom error handling, rate limiting and more
 
 `$ rapid-xpress create express`
 

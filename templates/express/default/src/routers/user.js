@@ -3,6 +3,7 @@ const User = require("../models/user");
 const Auth = require("../middleware/auth");
 const multer = require("multer");
 const sharp = require("sharp");
+const { createAccountLimiter } = require("../utils/rateLimiters");
 const {
   sendWelcomeEmail,
   sendCancellationEmail,
@@ -13,8 +14,8 @@ const {
 } = require("../utils/validations/validation");
 const router = new express.Router();
 
-// sign up new users
-router.post("/users", async (req, res) => {
+// sign up new users with rate limit
+router.post("/users", createAccountLimiter, async (req, res) => {
   const { error } = signupValidation(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 

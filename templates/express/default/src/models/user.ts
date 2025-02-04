@@ -1,10 +1,27 @@
-const mongoose = require("mongoose");
-const validator = require("validator");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const customError = require("../middleware/error/customError");
+import mongoose, { Schema, Model } from "mongoose";
+import * as bcrypt from 'bcrypt'
+import * as jwt from "jsonwebtoken"
+import { CustomError } from "../middleware/error/customError";
 
-const userSchema = new mongoose.Schema(
+
+interface IUserModel extends Model<IUser> {
+  findByCredentials: (
+    email: string,
+    password: string) => Promise<IUser>;
+}
+
+export interface IUser extends mongoose.Document {
+  name: string;
+  email: string;
+  password: string;
+  age: number;
+  avatar: Buffer;
+  tokens: { token: string }[];
+  generateAuthToken(): Promise<string>;
+  findByCredentials(email: string, password: string): Promise<IUser>;
+}
+
+const userSchema = new Schema<IUser>(
   {
     name: {
       type: String,
@@ -17,41 +34,18 @@ const userSchema = new mongoose.Schema(
       unique: true,
       required: true,
       trim: true,
-      lowercase: true,
-      validate(value) {
-        if (!validator.isEmail(value)) {
-          throw new Error("Email is invalid");
-        }
-      },
+      lowercase: true
     },
     password: {
       type: String,
       required: true,
       minLength: 7,
       trim: true,
-      validate(value) {
-        if (value.toLowerCase().includes("password")) {
-          throw new Error("Password musn't contain password");
-        }
-      },
     },
     age: {
       type: Number,
       default: 0,
-      validate(value) {
-        if (value < 0) {
-          throw new Error("Age must be a positive number");
-        }
-      },
     },
-    tokens: [
-      {
-        token: {
-          type: String,
-          required: true,
-        },
-      },
-    ],
     avatar: {
       type: Buffer,
     },
@@ -74,7 +68,7 @@ userSchema.methods.toJSON = function () {
 
 userSchema.methods.generateAuthToken = async function () {
   const user = this;
-  const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET);
+  const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET!);
 
   user.tokens = user.tokens.concat({ token });
   await user.save();
@@ -86,13 +80,13 @@ userSchema.statics.findByCredentials = async (email, password) => {
   const user = await User.findOne({ email });
 
   if (!user) {
-    throw new customError("USER_NOT_FOUND");
+    throw new CustomError("USER_NOT_FOUND");
   }
 
   const isMatch = await bcrypt.compare(password, user.password);
 
   if (!isMatch) {
-    throw new customError("INVALID_EMAIL_OR_PASSWORD");
+    throw new CustomError("INVALID_EMAIL_OR_PASSWORD");
   }
 
   return user;
@@ -108,6 +102,6 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-const User = mongoose.model("User", userSchema);
+const User: IUserModel = mongoose.model<IUser, IUserModel>('User', userSchema);
 
-module.exports = User;
+export { User };

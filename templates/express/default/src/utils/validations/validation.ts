@@ -1,6 +1,17 @@
-const Joi = require("joi");
+import Joi from "joi";
 
-const signupValidation = (data) => {
+export interface ISignUpData {
+  name: string;
+  age: number;
+  password: string;
+  email: string;
+}
+
+export interface ILoginData {
+  password: string;
+  email: string;
+}
+export const signupValidation = (data: ISignUpData) => {
   const schema = Joi.object({
     name: Joi.string().required(),
     age: Joi.number().positive().required(),
@@ -10,7 +21,7 @@ const signupValidation = (data) => {
   return schema.validate(data);
 };
 
-const loginValidation = (data) => {
+export const loginValidation = (data: ILoginData) => {
   const schema = Joi.object({
     password: Joi.string().min(6).required(),
     email: Joi.string().min(6).required().email(),
@@ -18,5 +29,3 @@ const loginValidation = (data) => {
   return schema.validate(data);
 };
 
-module.exports.signupValidation = signupValidation;
-module.exports.loginValidation = loginValidation;

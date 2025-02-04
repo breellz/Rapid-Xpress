@@ -1,4 +1,4 @@
-module.exports = {
+export const errorCodes = {
   INVALID_EMAIL_OR_PASSWORD: {
     statusCode: 400, // Bad Request
     message: "Invalid email address or password",

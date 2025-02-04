@@ -16,6 +16,7 @@ Install Rapid Xpress globally so you can have access to it anywhere
 
 - Rapidly initialize your project.
 - Pre-configured authentication features.
+- Rate limiting and custom error handling configured
 - Effortlessly create application files with CRUD operations.
 
 # Docs
@@ -24,7 +25,7 @@ Install Rapid Xpress globally so you can have access to it anywhere
 
 # GETTING STARTED
 
-To initialize a new project, you need to use the <b>create</b> command and specify the template to use.
+To initialize a new project, you need to use the <b>create</b> command
 
 Let's create a new Express app, with the default template. Project files would be created in the current working directory
 
@@ -36,7 +37,7 @@ To use a specified template e.g mvc
 
 `$ rapid-xpress create express --variant mvc`
 
-Project dependencies are automatiacally installed and you'll be prompted for your project attributes
+Project dependencies are automatically installed and you'll be prompted for your project attributes
 
 To run development server
 

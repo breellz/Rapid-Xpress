@@ -18,6 +18,7 @@ Install Rapid Xpress globally so you can have access to it anywhere
 - Pre-configured authentication features.
 - Rate limiting and custom error handling configured
 - Effortlessly create application files with CRUD operations.
+- Email SMTP configuration.
 
 # Docs
 

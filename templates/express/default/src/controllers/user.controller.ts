@@ -1,8 +1,11 @@
+import { sendErrorResponse, sendSuccessResponse } from "../middleware/error/responseHandler";
 import { CustomRequest } from "../middleware/auth";
-import { Response } from "express";
+import { NextFunction, Response } from "express";
+import AppError from "../middleware/error/errorHandler";
+import sendEmail from '../services/email.service';
 
 
-export const updateUser = async (req: CustomRequest, res: Response) => {
+export const updateUser = async (req: CustomRequest, res: Response, next: NextFunction) => {
   const updates = Object.keys(req.body);
   const allowedUpdates = ["name", "password", "age"];
 
@@ -11,31 +14,32 @@ export const updateUser = async (req: CustomRequest, res: Response) => {
   );
 
   if (!isValidOperation) {
-    res.status(400).send({ error: "invalid updates" });
-    return
+    return sendErrorResponse(res, "Invalid updates!", 400);
   }
   try {
 
-    res.status(200).send({
-      message: "user updated successfully"
-    });
-    return
+    //handle update
+    return sendSuccessResponse(res, "user updated successfully", 200, { user: req.user });
   } catch (error) {
-    res.status(400).send({ error: error.message });
-    return
+    next(new AppError('Failed to update user', 500));
   }
 }
 
-export const deleteUser = async (req: CustomRequest, res: Response) => {
+export const deleteUser = async (req: CustomRequest, res: Response, next: NextFunction) => {
   try {
     await req.user!.deleteOne();
-    //sendCancellationEmail(req.user.email, req.user.name)
-    res.status(200).send({
-      message: "user deleted successfully",
-    })
-    return
+    //sendCancellationEmail
+    await sendEmail(
+      'account-deletion',
+      {
+        to: req.user!.email,
+        subject: 'Account Deleted',
+        message: `Your account has been deleted successfully`,
+        html: `<p>Your account has been deleted successfully</p>`
+      }
+    )
+    return sendSuccessResponse(res, "user deleted successfully", 200, { user: req.user });
   } catch (error) {
-    res.status(400).send({ error: error.message });
-    return
+    next(new AppError('Failed to delete user', 500));
   }
 }

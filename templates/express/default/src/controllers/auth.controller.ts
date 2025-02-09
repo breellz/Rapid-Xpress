@@ -2,12 +2,14 @@ import { CustomRequest } from "../middleware/auth";
 import { NextFunction, Request, Response } from "express";
 import { loginValidation, signupValidation } from "../utils/validations/validation";
 import { User } from "../models/user";
+import { sendErrorResponse, sendSuccessResponse } from "../middleware/error/responseHandler";
+import AppError from "../middleware/error/errorHandler";
+import sendEmail from "../services/email.service";
 
-export const createUser = async (req: Request, res: Response) => {
+export const createUser = async (req: Request, res: Response, next: NextFunction) => {
   const { error } = signupValidation(req.body);
   if (error) {
-    res.status(400).send(error.details[0].message);
-    return
+    return sendErrorResponse(res, error.message, 400);
   }
 
   const user = new User(req.body);
@@ -15,13 +17,21 @@ export const createUser = async (req: Request, res: Response) => {
   try {
     await user.save();
     // sendWelcomeEmail(user.email, user.name)
+    await sendEmail(
+      'welcome-mail',
+      {
+        to: user.email,
+        subject: 'Welcome',
+        message: `Welcome to our platform`,
+        html: `<p>Welcome to our platform</p>`
+      }
+    )
     const token = await user.generateAuthToken();
 
-    res.status(201).send({ message: "user created successfully", data: { user, token } });
-    return
+
+    return sendSuccessResponse(res, "user created successfully", 201, { user, token });
   } catch (error) {
-    res.status(500).send({ error: error.message });
-    return
+    next(new AppError('Failed to create user', 500));
   }
 }
 
@@ -30,8 +40,7 @@ export const createUser = async (req: Request, res: Response) => {
 export const login = async (req: Request, res: Response, next: NextFunction) => {
   const { error } = loginValidation(req.body);
   if (error) {
-    res.status(400).send(error.details[0].message);
-    return
+    return sendErrorResponse(res, error.message, 400);
   }
 
   try {
@@ -40,11 +49,9 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
       req.body.password
     );
     const token = await user.generateAuthToken();
-    res.send({ message: "login successful", data: { user, token } });
-    return
+    return sendSuccessResponse(res, "user logged in successfully", 200, { user, token });
   } catch (error) {
     //pass error
-    next(error);
-    return
+    next(new AppError('Login failed', 500));
   }
 }

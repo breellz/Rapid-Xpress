@@ -55,3 +55,16 @@ Contributions are welcomed. Kindly visit the github repo and submit a pull reque
 # License
 
 [MIT](https://github.com/breellz/Rapid-Xpress/blob/main/LICENSE)
+
+# ChangeLog:
+
+## [2.0.0] - 2025-02-09
+
+### Changed
+
+- Project structure updated to TypeScript.
+- Email setup changed from SendGrid to SMTP.
+
+### Added
+
+- Redis integration for email.

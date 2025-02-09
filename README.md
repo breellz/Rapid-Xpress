@@ -32,11 +32,9 @@ Let's create a new Express app, with the default template. Project files would b
 
 Template comes with authentication, custom error handling, rate limiting and more
 
-`$ rapid-xpress create express`
+`$ rapid-xpress create`
 
-To use a specified template e.g mvc
-
-`$ rapid-xpress create express --variant mvc`
+You will be prompted to select a variant from the available options (e.g., mongodb, postgres).
 
 Project dependencies are automatically installed and you'll be prompted for your project attributes
 
@@ -44,7 +42,7 @@ To run development server
 
 `npm run dev`
 
-Server would be running on http://localhost:8080/ by default
+Server would be running on http://localhost:[[PORT]]/ by default
 
 # Contributors
 
@@ -57,6 +55,16 @@ Contributions are welcomed. Kindly visit the github repo and submit a pull reque
 [MIT](https://github.com/breellz/Rapid-Xpress/blob/main/LICENSE)
 
 # ChangeLog:
+
+## [3.0.0] - 2025-02-09
+
+### Changed
+
+- template and cariant command
+
+### Added
+
+- Support for postgres
 
 ## [2.0.0] - 2025-02-09
 

@@ -1,0 +1,60 @@
+import * as jwt from 'jsonwebtoken'
+import { User, IUser } from '../entities/user.entity'
+import { Request, Response, NextFunction } from 'express'
+import datasource from '../db/db'
+
+export const auth = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+
+  } catch (error) {
+    res.status(401).send({ error: "Authentication required" })
+  }
+}
+
+export interface CustomRequest extends Request {
+  user?: IUser;
+  token?: string;
+}
+
+export const Auth = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { user, token } = await BaseAuth(req, res, next);
+    req.user = user;
+    req.token = token;
+    next()
+  } catch (error) {
+    console.log(error);
+    res.status(401).send({ error: "You are not authenticated" });
+  }
+};
+
+export const BaseAuth = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+): Promise<{ user: IUser, token: string }> => {
+  const token = req.header("Authorization")?.replace("Bearer ", "");
+
+  if (!token) {
+    throw new Error("no token was found");
+  }
+  const decoded = jwt.verify(token, process.env.JWT_SECRET!)
+  const userRepo = datasource.getRepository(User)
+  const user = await userRepo.findOne({ where: { id: (decoded as any).id } })
+
+  if (!user) {
+    throw new Error("no user was found")
+  }
+  req.token = token
+  req.user = user
+  next()
+
+  return { user, token };
+};
+
+
+

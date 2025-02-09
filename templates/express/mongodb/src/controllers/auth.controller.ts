@@ -1,22 +1,22 @@
-import { CustomRequest } from "../middleware/auth";
 import { NextFunction, Request, Response } from "express";
-import { loginValidation, signupValidation } from "../utils/validations/validation";
-import { User } from "../models/user";
-import { sendErrorResponse, sendSuccessResponse } from "../middleware/error/responseHandler";
 import AppError from "../middleware/error/errorHandler";
+import { sendErrorResponse, sendSuccessResponse } from "../middleware/error/responseHandler";
+import { User } from "../models/user";
+import { createUserAccount } from "../services/auth.service";
 import sendEmail from "../services/email.service";
+import { loginValidation, signupValidation } from "../utils/validations/validation";
 
 export const createUser = async (req: Request, res: Response, next: NextFunction) => {
-  const { error } = signupValidation(req.body);
+  const { email, password } = req.body;
+
+  const { error } = signupValidation({ email, password });
   if (error) {
     return sendErrorResponse(res, error.message, 400);
   }
 
-  const user = new User(req.body);
-
   try {
-    await user.save();
-    // sendWelcomeEmail(user.email, user.name)
+    const user = await createUserAccount(email, password);
+    // sendWelcomeEmail
     await sendEmail(
       'welcome-mail',
       {
@@ -38,15 +38,16 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
 // login route with custom error handling
 
 export const login = async (req: Request, res: Response, next: NextFunction) => {
-  const { error } = loginValidation(req.body);
+  const { email, password } = req.body;
+  const { error } = loginValidation({ email, password });
   if (error) {
     return sendErrorResponse(res, error.message, 400);
   }
 
   try {
     const user = await User.findByCredentials(
-      req.body.email,
-      req.body.password
+      email,
+      password
     );
     const token = await user.generateAuthToken();
     return sendSuccessResponse(res, "user logged in successfully", 200, { user, token });

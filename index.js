@@ -4,7 +4,7 @@ const prog = require("caporal");
 const init = require("./lib/create");
 
 prog
- .version("3.0.0")
+ .version("3.0.2")
  .command("create", "Create a new application")
  .action(init);
 

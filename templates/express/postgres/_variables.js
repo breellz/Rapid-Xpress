@@ -1,7 +1,1 @@
-module.exports = [
-  "project_name",
-  "version",
-  "description",
-  "author",
-  "license",
-];
+module.exports = ["project_name", "version", "description", "author"];

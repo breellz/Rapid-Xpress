@@ -1,6 +1,6 @@
 {
   "name": "rapid-xpress",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "description": "A CLI generator for lightning-fast scaffolding of ExpressJS applications, empowering you to build with speed and efficiency",
   "main": "index.js",
   "bin": {
